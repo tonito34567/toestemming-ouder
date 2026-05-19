@@ -319,6 +319,7 @@ async function submitForm(e) {
   // Collect data
   const sigDataURL = document.getElementById('sig-canvas').toDataURL('image/png');
   const payload = {
+    'access_key': '6181ee42-50a4-43a6-8001-eb093d057bf8',
     'Naam kind': document.getElementById('naam_kind').value,
     'Naam ouder/verzorger': document.getElementById('naam_ouder').value,
     'E-mailadres ouder/verzorger': document.getElementById('email_ouder').value,
@@ -334,7 +335,7 @@ async function submitForm(e) {
   };
 
   try {
-    const res = await fetch('https://formspree.io/f/xbdbdkde', {
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
