@@ -318,16 +318,15 @@ async function submitForm(e) {
   tmpCtx.drawImage(sigCanvas, 0, 0, 400, 120);
   const sigDataURL = tmpCanvas.toDataURL('image/jpeg', 0.5);
   const payload = {
-    'Naam deelnemer': document.getElementById('naam').value,
-    'Leeftijd': document.getElementById('leeftijd').value,
+    'Naam kind': document.getElementById('naam').value,
+    'Naam ouder/verzorger': document.getElementById('naam_ouder').value,
+    'E-mailadres ouder': document.getElementById('email_ouder').value,
     'Datum': document.getElementById('datum').value,
-    'Positie in het veld': document.getElementById('positie').value,
-    'Favoriete club': document.getElementById('club').value,
-    'Favoriete speler': document.getElementById('speler').value,
-    'Toestemming deelname': document.getElementById('cb1').checked ? 'Ja ✓' : 'Nee',
+    'Toestemming deelname kind': document.getElementById('cb1').checked ? 'Ja ✓' : 'Nee',
     'Toestemming audio-opname': document.getElementById('cb2').checked ? 'Ja ✓' : 'Nee',
-    'Begrepen: naam niet in scriptie': document.getElementById('cb3').checked ? 'Ja ✓' : 'Nee',
+    'Naam kind niet in onderzoek': document.getElementById('cb3').checked ? 'Ja ✓' : 'Nee',
     'Toestemming gebruik antwoorden': document.getElementById('cb4').checked ? 'Ja ✓' : 'Nee',
+    'Samenvatting gewenst': document.getElementById('cb5') ? (document.getElementById('cb5').checked ? 'Ja ✓' : 'Nee') : 'Nee',
   };
 
   try {
