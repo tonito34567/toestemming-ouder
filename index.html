@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toestemmingsformulier – Ouder/Verzorger</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+  :root {
+    --ink: #1a1a2e; --mid: #4a4a6a; --light: #8888a8;
+    --accent: #2563a8; --accent-light: #dbeafe;
+    --bg: #f8f7f4; --white: #ffffff; --border: #d0cfc8;
+    --success: #16a34a; --warning: #b45309; --required: #dc2626;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.65; font-size: 15px; }
+  .page-wrap { max-width: 740px; margin: 0 auto; padding: 40px 24px 80px; }
+  .doc-header { border-bottom: 2px solid var(--ink); padding-bottom: 24px; margin-bottom: 32px; }
+  .doc-header h1 { font-family: 'Lora', serif; font-size: 22px; font-weight: 600; line-height: 1.3; margin-bottom: 6px; }
+  .doc-header .subtitle { font-size: 13px; color: var(--mid); font-style: italic; font-family: 'Lora', serif; }
+  .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; font-size: 14px; }
+  .meta-table td { padding: 8px 12px; border: 1px solid var(--border); }
+  .meta-table td:first-child { font-weight: 600; background: var(--accent-light); color: var(--accent); width: 200px; white-space: nowrap; }
+  .section { margin-bottom: 28px; }
+  .section h2 { font-family: 'Lora', serif; font-size: 16px; font-weight: 600; border-left: 3px solid var(--accent); padding-left: 10px; margin-bottom: 12px; }
+  .section p { color: var(--mid); margin-bottom: 10px; font-size: 14.5px; }
+  .section ul { padding-left: 20px; color: var(--mid); font-size: 14.5px; }
+  .section ul li { margin-bottom: 4px; }
+  .warning-box { background: #fef3c7; border-left: 3px solid var(--warning); padding: 12px 16px; border-radius: 0 4px 4px 0; font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+  .form-section { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 24px 28px; margin-bottom: 28px; }
+  .form-section h2 { font-family: 'Lora', serif; font-size: 17px; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .field-group { margin-bottom: 18px; }
+  label.field-label { display: block; font-weight: 600; font-size: 13.5px; color: var(--ink); margin-bottom: 6px; }
+  label.field-label .req { color: var(--required); margin-left: 3px; }
+  input[type="text"], input[type="number"], input[type="date"], input[type="email"], select {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 4px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--bg); transition: border-color .15s; -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px rgba(37,99,168,.1); }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .checkbox-list { display: flex; flex-direction: column; gap: 12px; }
+  .checkbox-item { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 10px 14px; border: 1px solid var(--border); border-radius: 5px; transition: background .12s, border-color .12s; background: var(--bg); }
+  .checkbox-item:hover, .checkbox-item.checked { background: var(--accent-light); border-color: var(--accent); }
+  .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; min-width: 18px; margin-top: 2px; accent-color: var(--accent); cursor: pointer; }
+  .cb-label { font-size: 14px; color: var(--mid); line-height: 1.45; user-select: none; }
+  .sig-canvas-wrap { border: 1px solid var(--border); border-radius: 4px; background: var(--white); position: relative; height: 110px; margin-bottom: 8px; cursor: crosshair; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .sig-placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--light); font-size: 13px; pointer-events: none; font-style: italic; transition: opacity .2s; }
+  .sig-actions { display: flex; gap: 8px; margin-top: 8px; }
+  button.btn-clear { font-family: 'Source Sans 3', sans-serif; font-size: 13px; padding: 5px 14px; border: 1px solid var(--border); background: var(--white); color: var(--mid); border-radius: 4px; cursor: pointer; transition: all .12s; }
+  button.btn-clear:hover { border-color: var(--required); color: var(--required); }
+  .action-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  button.btn-primary { font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 15px; padding: 11px 28px; background: var(--accent); color: var(--white); border: none; border-radius: 5px; cursor: pointer; transition: background .15s; }
+  button.btn-primary:hover { background: #1a4f8a; }
+  button.btn-primary:disabled { background: #9ab3d4; cursor: not-allowed; }
+  button.btn-secondary { font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 15px; padding: 11px 28px; background: var(--white); color: var(--ink); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; transition: all .15s; }
+  button.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .field-error { color: var(--required); font-size: 12.5px; margin-top: 4px; display: none; }
+  .field-error.visible { display: block; }
+  input.invalid, select.invalid { border-color: var(--required); }
+  .success-banner { display: none; background: #dcfce7; border: 1px solid #16a34a; border-radius: 6px; padding: 20px 24px; text-align: center; margin-top: 24px; }
+  .success-banner h3 { font-family: 'Lora', serif; color: var(--success); margin-bottom: 6px; }
+  .success-banner p { color: #166534; font-size: 14px; }
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-label { font-size: 12.5px; color: var(--light); margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width .3s ease; border-radius: 2px; }
+  .notice { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 0 4px 4px 0; font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+  .sending-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,.85); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; font-family: 'Lora', serif; font-size: 18px; color: var(--accent); }
+  .sending-overlay.active { display: flex; }
+  .spinner { width: 40px; height: 40px; border: 3px solid var(--accent-light); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media print { .action-bar, button, .sig-actions, .progress-wrap, .sending-overlay { display: none !important; } body { background: white; } .form-section { border: 1px solid #ccc; } }
+  @media (max-width: 520px) { .row-2 { grid-template-columns: 1fr; } .doc-header h1 { font-size: 19px; } .form-section { padding: 18px 16px; } }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("UrMAT8MsXIjZjxCxU");</script>
+</head>
+<body>
+<div class="sending-overlay" id="sending-overlay">
+  <div class="spinner"></div>
+  <span>Formulier wordt verzonden…</span>
+</div>
+
+<div class="page-wrap">
+  <div class="doc-header">
+    <h1>Informatie- en toestemmingsformulier ouder/verzorger</h1>
+    <div class="subtitle">Digitale versie – na invullen direct verzonden per e-mail</div>
+  </div>
+
+  <table class="meta-table">
+    <tr><td>Onderzoeksonderwerp</td><td>Voetbalidolen &amp; Social Media</td></tr>
+    <tr><td>Doelgroep</td><td>Ouder/verzorger van deelnemer van 13 tot 15 jaar</td></tr>
+    <tr><td>Onderzoeker</td><td>Mats van der Plaats (studentnummer 788017)</td></tr>
+    <tr><td>Opleiding</td><td>MA Media &amp; Journalistiek – Erasmus Universiteit Rotterdam</td></tr>
+  </table>
+
+  <div class="progress-wrap">
+    <div class="progress-label" id="progress-label">Voortgang: 0% ingevuld</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div class="section">
+    <h2>Geachte ouder/verzorger</h2>
+    <p>Mijn naam is Mats van der Plaats (24). Voor de masteropleiding Media &amp; Journalistiek aan de Erasmus Universiteit Rotterdam voer ik onderzoek uit naar voetbalidolen, social media en de manier waarop jongeren betekenis geven aan profvoetballers.</p>
+    <p>Uw kind is gevraagd deel te nemen aan een focusgroep omdat hij/zij tussen de 13 en 15 jaar oud is, bij een voetbalvereniging speelt, social media gebruikt en interesse heeft in profvoetbal.</p>
+  </div>
+  <div class="section">
+    <h2>Doel van het onderzoek</h2>
+    <p>Het onderzoek richt zich op hoe jongeren kijken naar profvoetballers in de media en op social media: favoriete spelers, clubs, online content, nieuws en idolen. Het is een scriptieonderzoek voor een masterstudie en is <strong>niet commercieel</strong> van aard.</p>
+  </div>
+  <div class="section">
+    <h2>Wat houdt deelname in?</h2>
+    <p>Uw kind neemt deel aan een informeel groepsgesprek (focusgroep) van 45–60 minuten op de voetbalvereniging. Er wordt een <strong>audio-opname</strong> gemaakt (geen video). Deelname is volledig vrijwillig; uw kind mag vragen overslaan en op elk moment stoppen.</p>
+  </div>
+  <div class="section">
+    <h2>Risico's en maatregelen</h2>
+    <div class="warning-box">Sommige onderwerpen kunnen persoonlijk aanvoelen. Uw kind hoeft nooit iets te vertellen wat hij/zij niet wil. Vertrouwelijkheid binnen een focusgroep kan niet volledig worden gegarandeerd.</div>
+  </div>
+  <div class="section">
+    <h2>Vergoeding</h2>
+    <ul>
+      <li>€10,– financiële vergoeding per deelnemer</li>
+      <li>Snacks en drinken tijdens de focusgroep</li>
+      <li>De onderzoeker helpt een dag mee als vrijwilliger bij de vereniging</li>
+    </ul>
+  </div>
+  <div class="section">
+    <h2>Privacy &amp; gegevens</h2>
+    <p>De naam van uw kind wordt vervangen door een schuilnaam (bijv. 'Respondent 1'). Geen namen in de scriptie. Audio-opnames worden vertrouwelijk bewaard en verwijderd na afronding. Gegevens kunnen tot 10 jaar worden bewaard (EUR-regels).</p>
+  </div>
+  <div class="section">
+    <h2>Vrijwilligheid &amp; terugtrekken</h2>
+    <p>Deelname is volledig vrijwillig. U of uw kind kan zich ook na afloop terugtrekken. De onderzoeker zal bekijken welke gegevens verwijderd of geanonimiseerd kunnen worden.</p>
+  </div>
+  <div class="section">
+    <h2>Contact</h2>
+    <p><strong>Mats van der Plaats</strong> – <a href="mailto:matsvdplaats013@gmail.com">matsvdplaats013@gmail.com</a> / +31 6 10239377<br>
+    Klachten: <a href="mailto:fg@eur.nl">fg@eur.nl</a> (FG Erasmus UR) of <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank">autoriteitpersoonsgegevens.nl</a> / 088 – 1805250</p>
+  </div>
+
+  <form id="consent-form" novalidate>
+    <div class="form-section">
+      <h2>Gegevens</h2>
+      <div class="field-group">
+        <label class="field-label" for="naam">Naam kind <span class="req">*</span></label>
+        <input type="text" id="naam" placeholder="Voor- en achternaam kind" required>
+        <div class="field-error" id="err-naam">Vul de naam van het kind in.</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="naam_ouder">Naam ouder/verzorger <span class="req">*</span></label>
+        <input type="text" id="naam_ouder" placeholder="Voor- en achternaam ouder/verzorger" required>
+        <div class="field-error" id="err-naam_ouder">Vul uw naam in.</div>
+      </div>
+      <div class="row-2">
+        <div class="field-group">
+          <label class="field-label" for="email_ouder">E-mailadres <span style="font-weight:400;color:var(--light)">(optioneel – voor samenvatting)</span></label>
+          <input type="email" id="email_ouder" placeholder="uw@email.nl">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="datum">Datum <span class="req">*</span></label>
+          <input type="date" id="datum" required>
+          <div class="field-error" id="err-datum">Selecteer een datum.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Toestemmingsverklaringen <span style="font-size:13px;font-weight:400;color:var(--required)">– alle vier vereist</span></h2>
+      <div class="notice">Lees elke verklaring goed door en vink aan als je akkoord gaat.</div>
+      <div class="checkbox-list">
+        <label class="checkbox-item" id="cb-wrap-1"><input type="checkbox" id="cb1"><span class="cb-label">Ik heb de informatie gelezen of uitgelegd gekregen. Ik begrijp waar het onderzoek over gaat en geef toestemming om mee te doen.</span></label>
+        <label class="checkbox-item" id="cb-wrap-2"><input type="checkbox" id="cb2"><span class="cb-label">Ik geef toestemming dat het groepsgesprek met audio wordt opgenomen.</span></label>
+        <label class="checkbox-item" id="cb-wrap-3"><input type="checkbox" id="cb3"><span class="cb-label">Ik begrijp dat mijn naam niet in de scriptie wordt gebruikt (anonimisering via schuilnaam).</span></label>
+        <label class="checkbox-item" id="cb-wrap-4"><input type="checkbox" id="cb4"><span class="cb-label">Ik geef toestemming dat mijn antwoorden worden gebruikt voor dit onderzoek.</span></label>
+      </div>
+      <div class="field-error" id="err-cb" style="margin-top:10px">Vink alle vier verklaringen aan om door te gaan.</div>
+    </div>
+
+    <div class="form-section">
+      <h2>Handtekening ouder/verzorger <span class="req">*</span></h2>
+      <p style="font-size:13.5px;color:var(--mid);margin-bottom:12px">Teken hieronder met uw muis, vinger of stylus.</p>
+      <div class="sig-canvas-wrap"><canvas id="sig-canvas"></canvas><span class="sig-placeholder" id="sig-placeholder">Teken hier ↓</span></div>
+      <div class="sig-actions"><button type="button" class="btn-clear" id="btn-clear-sig">Handtekening wissen</button></div>
+      <div class="field-error" id="err-sig" style="margin-top:6px">Zet je handtekening om het formulier in te dienen.</div>
+    </div>
+
+    <div class="action-bar">
+      <button type="submit" class="btn-primary" id="btn-submit">✓ Formulier indienen</button>
+      <button type="button" class="btn-secondary" onclick="window.print()">⎙ Afdrukken</button>
+    </div>
+  </form>
+
+  <div class="success-banner" id="success-banner">
+    <h3>✓ Formulier succesvol verzonden</h3>
+    <p>Bedankt. De onderzoeker heeft het toestemmingsformulier ontvangen.</p>
+    <div style="margin-top:14px"><button type="button" class="btn-secondary" onclick="window.print()">⎙ Afdrukken als bewijs</button></div>
+  </div>
+</div>
+
+<script>
+
+// ── Signature pad ──────────────────────────────────────────────
+function initSignature(canvasId, placeholderId, clearBtnId, hasSigRef) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const placeholder = document.getElementById(placeholderId);
+  let drawing = false;
+
+  function resize() {
+    const wrap = canvas.parentElement;
+    const ratio = window.devicePixelRatio || 1;
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    canvas.width = wrap.clientWidth * ratio;
+    canvas.height = wrap.clientHeight * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.strokeStyle = '#1a1a2e'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function pos(e) {
+    const r = canvas.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  }
+  canvas.addEventListener('mousedown', e => { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); hasSigRef.value = true; placeholder.style.opacity = '0'; updateProgress(); });
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('mouseleave', () => drawing = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); hasSigRef.value = true; placeholder.style.opacity = '0'; updateProgress(); }, { passive: false });
+  canvas.addEventListener('touchend', () => drawing = false);
+  document.getElementById(clearBtnId).addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSigRef.value = false; placeholder.style.opacity = '1'; updateProgress();
+  });
+  return canvas;
+}
+
+const hasSig = { value: false };
+const sigCanvas = initSignature('sig-canvas', 'sig-placeholder', 'btn-clear-sig', hasSig);
+
+['cb1','cb2','cb3','cb4','cb5'].forEach(id => {
+  document.getElementById(id).addEventListener('change', function() {
+    this.closest('.checkbox-item').classList.toggle('checked', this.checked);
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const fields = ['naam','naam_ouder','datum'];
+  const filled = fields.filter(id => document.getElementById(id).value.trim() !== '').length;
+  const cbs = ['cb1','cb2','cb3','cb4'].filter(id => document.getElementById(id).checked).length;
+  const total = 8; // 3 fields + 4 cbs + sig
+  const score = filled + cbs + (hasSig.value ? 1 : 0);
+  const pct = Math.round(score / total * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = 'Voortgang: ' + pct + '% ingevuld';
+}
+['naam','naam_ouder','datum'].forEach(id => document.getElementById(id).addEventListener('input', updateProgress));
+
+
+async function submitForm(e) {
+  e.preventDefault();
+  let valid = true;
+
+  // Validate required text/date/number fields
+  
+  {
+    const el = document.getElementById('naam');
+    const ok = el.value.trim() !== '';
+    el.classList.toggle('invalid', !ok);
+    document.getElementById('err-naam').classList.toggle('visible', !ok);
+    if (!ok) valid = false;
+  }
+  {
+    const el = document.getElementById('naam_ouder');
+    const ok = el.value.trim() !== '';
+    el.classList.toggle('invalid', !ok);
+    document.getElementById('err-naam_ouder').classList.toggle('visible', !ok);
+    if (!ok) valid = false;
+  }
+  {
+    const el = document.getElementById('datum');
+    const ok = el.value.trim() !== '';
+    el.classList.toggle('invalid', !ok);
+    document.getElementById('err-datum').classList.toggle('visible', !ok);
+    if (!ok) valid = false;
+  }
+  // Validate required checkboxes
+  const allCbs = ["cb1","cb2","cb3","cb4"].every(id => document.getElementById(id).checked);
+  document.getElementById('err-cb').classList.toggle('visible', !allCbs);
+  if (!allCbs) valid = false;
+
+  // Validate signature
+  document.getElementById('err-sig').classList.toggle('visible', !hasSig.value);
+  if (!hasSig.value) valid = false;
+
+  if (!valid) {
+    const firstErr = document.querySelector('.invalid, .field-error.visible');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // Show loading overlay
+  document.getElementById('sending-overlay').classList.add('active');
+  document.getElementById('btn-submit').disabled = true;
+
+  // Collect data — handtekening gecomprimeerd
+  const sigCanvas = document.getElementById('sig-canvas');
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = 400; tmpCanvas.height = 120;
+  const tmpCtx = tmpCanvas.getContext('2d');
+  tmpCtx.fillStyle = '#ffffff';
+  tmpCtx.fillRect(0, 0, 400, 120);
+  tmpCtx.drawImage(sigCanvas, 0, 0, 400, 120);
+  const sigDataURL = tmpCanvas.toDataURL('image/jpeg', 0.5);
+  const payload = {
+    'Naam deelnemer': document.getElementById('naam').value,
+    'Leeftijd': document.getElementById('leeftijd').value,
+    'Datum': document.getElementById('datum').value,
+    'Positie in het veld': document.getElementById('positie').value,
+    'Favoriete club': document.getElementById('club').value,
+    'Favoriete speler': document.getElementById('speler').value,
+    'Toestemming deelname': document.getElementById('cb1').checked ? 'Ja ✓' : 'Nee',
+    'Toestemming audio-opname': document.getElementById('cb2').checked ? 'Ja ✓' : 'Nee',
+    'Begrepen: naam niet in scriptie': document.getElementById('cb3').checked ? 'Ja ✓' : 'Nee',
+    'Toestemming gebruik antwoorden': document.getElementById('cb4').checked ? 'Ja ✓' : 'Nee',
+  };
+
+  try {
+    await emailjs.send('service_li5dpwo', 'template_0be8g0v', payload);
+    document.getElementById('consent-form').style.display = 'none';
+    document.getElementById('sending-overlay').classList.remove('active');
+    const banner = document.getElementById('success-banner');
+    banner.style.display = 'block';
+    banner.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('progress-fill').style.width = '100%';
+    document.getElementById('progress-label').textContent = 'Voortgang: 100% – Verzonden ✓';
+  } catch(err) {
+    document.getElementById('sending-overlay').classList.remove('active');
+    document.getElementById('btn-submit').disabled = false;
+    alert('Fout bij verzenden: ' + JSON.stringify(err));
+  }
+}
+document.getElementById('consent-form').addEventListener('submit', submitForm);
+
+
+document.getElementById('datum').value = new Date().toISOString().split('T')[0];
+updateProgress();
+</script>
+</body>
+</html>
